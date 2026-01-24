@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using PrecisionPlatformer.Combat.Services;
+using PrecisionPlatformer.Data.Combat;
 
 namespace PrecisionPlatformer.Core
 {
@@ -13,6 +15,13 @@ namespace PrecisionPlatformer.Core
         [Header("Scene Management")]
         [Tooltip("Scene to load after initialization (typically DevPlayground)")]
         [SerializeField] private string sceneToLoad = "DevPlayground";
+
+        [Header("Combat Configuration")]
+        [Tooltip("Global combat settings (create via Assets > Create > Platformer > Config > Combat)")]
+        [SerializeField] private CombatConfig combatConfig;
+
+        // Combat service instance for cleanup
+        private CombatService combatService;
 
         private void Awake()
         {
@@ -38,6 +47,10 @@ namespace PrecisionPlatformer.Core
         {
             // Clean up services and event subscriptions
             Debug.Log("=== Bootstrap: Cleaning up services ===");
+
+            // Clean up combat service subscriptions
+            combatService?.Cleanup();
+
             EventBus.ClearAll();
             ServiceLocator.ClearAll();
         }
@@ -57,6 +70,15 @@ namespace PrecisionPlatformer.Core
 
             // var physicsService = new PhysicsService();
             // ServiceLocator.Register<PhysicsService>(physicsService);
+
+            // Combat Service (Combat Track)
+            // Uncomment below when starting the combat track
+            // if (combatConfig != null)
+            // {
+            //     combatService = new CombatService(combatConfig);
+            //     ServiceLocator.Register<CombatService>(combatService);
+            //     Debug.Log("Bootstrap: CombatService registered");
+            // }
 
             Debug.Log("Bootstrap: Service registration complete (no services registered yet - students will add these)");
         }

@@ -493,6 +493,149 @@ No need for entire Unity scene or Player GameObject!
 
 ---
 
+## Combat System Architecture (Combat Track)
+
+The combat system extends the base architecture patterns for hitbox-based combat.
+
+### Combat Events
+
+Combat uses the same EventBus pattern with specialized events:
+
+```csharp
+// Events/CombatEvents.cs
+public readonly struct HitDetectedEvent
+{
+    public readonly CombatContext Context;   // Source, target, contact point
+    public readonly DamageInfo DamageInfo;   // Damage amount and type
+    public readonly KnockbackInfo KnockbackInfo;  // Force and direction
+}
+
+public readonly struct DamageAppliedEvent { ... }
+public readonly struct KnockbackAppliedEvent { ... }
+public readonly struct CharacterStateChangedEvent { ... }
+```
+
+### ICombatant Interface
+
+All combat participants implement ICombatant:
+
+```csharp
+public interface ICombatant
+{
+    Transform Transform { get; }
+    bool IsInvulnerable { get; }
+    int TeamId { get; }
+    void TakeDamage(float damage);
+    void ApplyKnockback(Vector2 knockbackForce);
+}
+```
+
+**Multiplayer-Ready**: When player slots are added, ICombatant gains a `PlayerIndex` property. No event refactoring needed since CombatContext carries ICombatant references.
+
+### Hitbox/Hurtbox System
+
+```
+Character (IHitboxOwner, ICombatant)
+├── Body (Hurtbox - green gizmo)
+├── Head (Hurtbox - weak point, 1.5x damage multiplier)
+└── AttackPoint
+    └── Hitbox (red gizmo - activates during attacks)
+```
+
+- **Hitbox**: Deals damage on overlap. Activate/Deactivate API for frame timing.
+- **Hurtbox**: Receives damage. Optional damage multiplier for weak points.
+- Both auto-find owner via `GetComponentInParent<IHitboxOwner>()`.
+
+### CombatService
+
+Central service that processes hit events:
+
+```csharp
+// Registered in Bootstrap.cs
+combatService = new CombatService(combatConfig);
+ServiceLocator.Register<CombatService>(combatService);
+```
+
+Responsibilities:
+- Validates hits (invulnerability, friendly fire)
+- Processes damage and knockback
+- Applies global config modifiers (knockback multiplier, hitstun clamping)
+- Publishes follow-up events (DamageApplied, KnockbackApplied)
+
+### CharacterState Machine
+
+State priorities ensure combat states override movement:
+
+```csharp
+public enum CharacterState
+{
+    // Movement States (0-99)
+    Idle = 0,
+    Running = 10,
+    Jumping = 20,
+    Falling = 25,
+
+    // Combat States (100-199)
+    Attacking = 100,
+    Recovery = 110,
+    Hitstun = 150,
+    Knockback = 160,
+    Invulnerable = 170,
+
+    // Special States (200+)
+    Dead = 200
+}
+```
+
+### Combat Data Flow
+
+```
+1. Attack input → Character starts attack
+2. StartupFrames pass → Hitbox.Activate()
+3. Hitbox overlaps Hurtbox → ProcessHit()
+4. EventBus.Publish(HitDetectedEvent)
+5. CombatService receives event:
+   - Validates hit
+   - Calculates damage/knockback
+   - Calls target.TakeDamage() and ApplyKnockback()
+   - Publishes DamageAppliedEvent, KnockbackAppliedEvent
+6. FeedbackManager receives events:
+   - Spawns hit particles
+   - Plays hit sound
+   - Triggers camera shake
+7. ActiveFrames end → Hitbox.Deactivate()
+8. RecoveryFrames pass → Return to Idle
+```
+
+### AttackConfig (ScriptableObject)
+
+Designer-tunable attack properties:
+
+```csharp
+[CreateAssetMenu(menuName = "Platformer/Config/Combat/Attack Config")]
+public class AttackConfig : ConfigBase
+{
+    // Damage
+    public float baseDamage = 10f;
+    public DamageType damageType = DamageType.Normal;
+
+    // Knockback
+    public float knockbackForce = 5f;
+    public float knockbackAngle = 45f;
+    public bool knockbackRelativeToHitDirection = true;
+
+    // Frame Data (at 60 FPS)
+    public int startupFrames = 5;
+    public int activeFrames = 3;
+    public int recoveryFrames = 10;
+
+    // Hitstun
+    public float hitstunDuration = 0.2f;
+}
+```
+
+---
+
 ## Additional Resources
 
 ### Recommended Reading
