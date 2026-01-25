@@ -1,277 +1,162 @@
 # Precision Platformer Template
-**CMGT 326 - Controls & Feel**
 
-## Course Overview
+A teaching-focused 2D platformer template that demonstrates proper input handling, movement physics, and game feel.
 
-This template provides the foundation for building a Celeste-quality precision platformer over 3 weeks (5 sessions + presentation).
+## What's In The Box
 
-### Team Structure
-- **Systems Designer**: Code-heavy, implements movement systems and architecture
-- **Gameplay Designer**: Feel-heavy, tunes parameters and tests in dev playground
-
-### Core Philosophy
-**CODE FIRST**: This template includes a complete professional dev playground so you can start coding immediately. Focus on systems implementation and feel tuning, not level building.
-
----
-
-## What's Included
-
-### ✅ Provided Infrastructure
-- **Core Architecture**:
-  - `ServiceLocator.cs` - Dependency injection pattern
-  - `EventBus.cs` - Decoupled event system
-  - `Bootstrap.cs` - Service initialization
-
-- **Dev Playground Scene** (`DevPlayground.unity`):
-  - 10 professional testing zones
-  - All zones labeled and color-coded
-  - Ready for immediate use
-
-- **Input System Foundation**:
-  - `InputHandler.cs` - Scaffold for input reading
-  - InputActions configured for keyboard + gamepad
-
-- **ScriptableObject Templates**:
-  - `ConfigBase.cs` - Base class pattern
-  - `MovementConfig.cs` - Example configuration
-
-- **Platform Prefabs**:
-  - BasicPlatform, Platform_Wide, Platform_Small
-  - Wall_Vertical, Ramp prefabs (15°, 30°, 45°, 60°)
-
-### ⚙️ What You Build (5 Sessions)
-
-| Session | Systems Designer | Gameplay Designer |
-|---------|-----------------|-------------------|
-| **1** | Movement, ground detection, physics service | Tune movement feel in Zone A & B |
-| **2** | Variable jump height, gravity scaling, multi-jump | Tune jump arcs in Zone C & D |
-| **3** | Dash system, wall mechanics, state machine | Test wall climbs in Zone E, combos in Zone H |
-| **4** | Coyote time, input buffering, forgiveness systems | Tune forgiveness windows in Zone G |
-| **5** | Debug tools, metrics collection, level elements | Playtest and data-driven tuning |
-
----
-
-## Dev Playground Zones
-
-The playground is your **testing laboratory**. Each zone validates specific mechanics:
-
-### Zone A: Horizontal Movement Test Strip (Red)
-- **Purpose**: Measure run speed, acceleration, deceleration
-- **Usage**: Time 0-to-max speed runs, test snap turns
-- **Session 1**: Primary testing area for MovementController
-
-### Zone B: Variable Platform Size Testing (Orange)
-- **Purpose**: Validate ground detection on edge cases
-- **Usage**: Walk across all platform widths (10u → 0.5u)
-- **Session 1**: Ensure GroundDetectionService works reliably
-
-### Zone C: Jump Height Calibration Towers (Blue)
-- **Purpose**: Measure min/max jump heights
-- **Usage**: Short tap vs. held jump, mark achievable heights
-- **Session 2**: Tune JumpConfig parameters
-
-### Zone D: Gap Distance Testing (Yellow)
-- **Purpose**: Test jump distance and dash distance
-- **Usage**: Find max reachable gap without dash, with dash
-- **Session 2-3**: Validate jump + dash distances
-
-### Zone E: Wall Jump Corridor (Green)
-- **Purpose**: Test wall slide, wall jump, vertical climbing
-- **Usage**: Climb from bottom to top using wall jumps
-- **Session 3**: Validate WallInteractionController
-
-### Zone F: Slope Testing Ramps (Brown)
-- **Purpose**: Validate ground detection on angled surfaces
-- **Usage**: Walk up/down ramps, verify grounded state
-- **Session 1**: Ensure slopes don't break ground detection
-
-### Zone G: Precision Jump Challenge Strip (Orange)
-- **Purpose**: Test coyote time and input buffering
-- **Usage**: Attempt jumps with late/early button presses
-- **Session 4**: Measure forgiveness system effectiveness
-
-### Zone H: Movement Chain Testing Area (Purple)
-- **Purpose**: Test complex movement sequences
-- **Usage**: Practice dash → wall jump → double jump chains
-- **Session 3-5**: Validate movement chaining feels smooth
-
-### Zone I: Performance Stress Test Zone (Red)
-- **Purpose**: Stress test VFX and particle systems
-- **Usage**: Spam jumps/dashes to create many particles
-- **Session 4-5**: Ensure 60 FPS with heavy VFX
-
-### Zone J: Free Experimentation Sandbox (Cyan)
-- **Purpose**: Freestyle testing and custom challenges
-- **Usage**: Add your own obstacles, test ideas
-- **All Sessions**: Open creative space
-
----
-
-## Architecture Patterns
-
-### ServiceLocator Pattern
-Register services at startup, access anywhere:
-
-```csharp
-// In Bootstrap.cs
-var groundDetection = new GroundDetectionService();
-ServiceLocator.Register<GroundDetectionService>(groundDetection);
-
-// In MovementController.cs
-var groundDetection = ServiceLocator.Get<GroundDetectionService>();
-bool isGrounded = groundDetection.IsGrounded();
+```
+Scripts/
+├── Core/
+│   └── ServiceLocator.cs    # Simple dependency injection
+├── Config/
+│   ├── InputConfig.cs       # Deadzones, buffering settings
+│   └── MovementConfig.cs    # Speed, acceleration, jumping
+└── Player/
+    ├── InputReader.cs       # Input reading & processing
+    └── PlayerController.cs  # Physics & movement
 ```
 
-### EventBus Pattern
-Publish events for decoupled communication:
+## Quick Setup
 
-```csharp
-// In JumpController.cs
-EventBus.Publish(new JumpStartedEvent(Time.time));
+### 1. Create Input Actions
 
-// In FeedbackManager.cs
-void OnEnable() => EventBus.Subscribe<JumpStartedEvent>(OnJumpStarted);
-void OnDisable() => EventBus.Unsubscribe<JumpStartedEvent>(OnJumpStarted);
+1. Right-click in Project: **Create > Input Actions**
+2. Name it `PlayerInputActions`
+3. Double-click to open the Input Actions editor
+4. Add Action Map named `Player`
+5. Add these actions:
 
-void OnJumpStarted(JumpStartedEvent evt)
-{
-    // Play jump particle effect
-}
-```
+| Action | Type | Bindings |
+|--------|------|----------|
+| Move | Value (Vector2) | Gamepad Left Stick, WASD/Arrows (2D Vector Composite) |
+| Jump | Button | Gamepad South Button, Spacebar |
 
-### ScriptableObject Pattern
-Create tunable configs for rapid iteration:
+6. Save and close
 
-```csharp
-[CreateAssetMenu(fileName = "JumpConfig", menuName = "Platformer/Config/Jump Config")]
-public class JumpConfig : ConfigBase
-{
-    public float jumpForce = 15f;
-    public float gravityMultiplierRising = 1f;
-    public float gravityMultiplierFalling = 2f;
-}
-```
+### 2. Create Config Assets
 
-**Gameplay Designer** can tune these values in Inspector without touching code!
+Right-click in Project > **Create > Platformer**:
+- Create **Input Config** → name it `DefaultInputConfig`
+- Create **Movement Config** → name it `DefaultMovementConfig`
 
----
+### 3. Set Up Layers
 
-## Getting Started
+1. Edit > Project Settings > Tags and Layers
+2. Add a layer named `Ground`
 
-### Session 1 Checklist
+### 4. Create the Player
 
-**Systems Designer:**
-- [ ] Read `ServiceLocator.cs` and `EventBus.cs` to understand patterns
-- [ ] Implement `GroundDetectionService.cs` with multi-raycast ground checking
-- [ ] Implement `MovementController.cs` for horizontal movement
-- [ ] Create `GroundDetectionConfig.cs` ScriptableObject
-- [ ] Register services in `Bootstrap.cs`
-- [ ] Test in Zone A (Movement Test Strip)
+1. Create empty GameObject, name it `Player`
+2. Add components:
+   - **Rigidbody2D**
+   - **BoxCollider2D** (or CapsuleCollider2D)
+   - **InputReader** (our script)
+   - **PlayerController** (our script)
+3. Create child empty GameObject at feet, name it `GroundCheck`
+4. Assign references:
+   - InputReader: `PlayerInputActions` asset, `DefaultInputConfig`
+   - PlayerController: `DefaultMovementConfig`, `GroundCheck` transform
+5. In MovementConfig, set Ground Layer to include your `Ground` layer
 
-**Gameplay Designer:**
-- [ ] Familiarize with Dev Playground - visit all 10 zones
-- [ ] Create MovementConfig asset in `Configs/Movement/`
-- [ ] Tune `maxSpeed`, `acceleration`, `deceleration` in Zone A
-- [ ] Test ground detection reliability in Zone B (all platform sizes)
-- [ ] Document baseline metrics:
-  - 0-to-max speed time: ___ seconds
-  - Stopping distance: ___ units
-  - Smallest platform that feels safe: ___ units
+### 5. Create Ground
 
-### Important Files to Start With
-1. `Assets/_Project/Scripts/Core/ServiceLocator.cs` - Understand this first
-2. `Assets/_Project/Scripts/Core/EventBus.cs` - Understand this second
-3. `Assets/_Project/Scripts/Input/InputHandler.cs` - Extend this for buffering later
-4. `Assets/_Project/SETUP_GUIDE.md` - Manual Unity setup steps
-5. `Assets/_Project/DEV_PLAYGROUND_GUIDE.md` - Zone usage reference
+1. Create empty GameObject, name it `Ground`
+2. Add **BoxCollider2D**, scale to be a platform
+3. Add **SpriteRenderer** if you want to see it (use Unity's built-in white square)
+4. Set Layer to `Ground`
+
+### 6. Add Visual (Optional)
+
+Add a SpriteRenderer to Player with any square sprite to see it.
+
+### 7. Play!
+
+Press Play. WASD/Arrow keys or left stick to move, Space/A button to jump.
 
 ---
 
-## Best Practices
+## Understanding the Code
 
-### Code Organization
-- **Namespace everything**: `PrecisionPlatformer.Core`, `PrecisionPlatformer.Systems`, etc.
-- **Follow naming conventions**: Classes = PascalCase, private fields = camelCase
-- **Add XML comments**: Every public method and property
-- **Use [Header] and [Tooltip]**: Make Inspector user-friendly for designers
+### Read These Files In Order
 
-### Decentralized Architecture
-✅ **DO**:
-- Use EventBus for cross-system communication
-- Access services via ServiceLocator
-- Put all tunable values in ScriptableObjects
-- Separate concerns (one class, one responsibility)
+1. **ServiceLocator.cs** - The simplest file. Explains the pattern.
+2. **InputConfig.cs** - Explains deadzones and input buffering concepts.
+3. **MovementConfig.cs** - Explains every tunable value and what it affects.
+4. **InputReader.cs** - How hardware input becomes game input.
+5. **PlayerController.cs** - How input becomes movement.
 
-❌ **DON'T**:
-- Create MonoBehaviour singletons (except Bootstrap)
-- Use `GameObject.Find()` in Update loops
-- Hardcode values - use ScriptableObjects!
-- Tightly couple systems with direct references
+Every file has extensive comments explaining the WHY, not just the WHAT.
 
-### Testing Workflow
-1. **Write code** (Systems Designer)
-2. **Test in specific zone** (both designers)
-3. **Tune parameters** (Gameplay Designer)
-4. **Document results** (both designers)
-5. **Iterate** based on feel
+### Key Concepts Taught
 
----
+**Input Handling:**
+- Circular deadzones and why they matter
+- Input buffering for responsive controls
+- Keyboard vs controller parity
+- Device detection
 
-## Success Metrics
+**Movement Physics:**
+- Acceleration-based movement (not instant velocity)
+- Turn-around boost for snappy direction changes
+- Air control multiplier
+- Direct velocity control vs AddForce
 
-### Technical
-- 60 FPS minimum at all times
-- No MonoBehaviour singletons (except Bootstrap)
-- All tunable values in ScriptableObjects
-- Zero `GameObject.Find()` calls in Update
-
-### Feel
-- Controls feel "tight" and "responsive" (playtester feedback)
-- Coyote time used in 20%+ of edge jumps (Session 4 metrics)
-- Input buffer prevents 30%+ of mistimed jumps (Session 4 metrics)
-- Movement chaining feels rewarding, not janky
+**Jumping:**
+- Variable jump height (tap vs hold)
+- Coyote time (grace period after leaving ground)
+- Input buffering (press jump before landing)
+- Gravity scaling (fall faster than rise)
 
 ---
 
-## Resources
+## Tuning Guide
 
-### Inside This Project
-- `SETUP_GUIDE.md` - Unity Editor setup instructions
-- `DEV_PLAYGROUND_GUIDE.md` - Zone-by-zone usage guide
-- `ARCHITECTURE_OVERVIEW.md` - Deep dive into patterns
-- `SESSION_CHECKLISTS/` - Week-by-week TODO lists
+### It Feels Sluggish
+- Increase `acceleration` in MovementConfig
+- Increase `turnAroundMultiplier`
+- Decrease `deceleration` slightly
 
-### External References
-- [Celeste & Forgiveness by Maddy Thorson](https://maddythorson.medium.com/celeste-forgiveness-31e4a40399f1)
-- [Unity Input System Documentation](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.16/manual/index.html)
-- [ScriptableObject Architecture](https://unity.com/how-to/architect-game-code-scriptable-objects)
+### It Feels Too Slippery
+- Increase `deceleration`
+- Decrease `acceleration` slightly
 
----
+### Jumps Feel Floaty
+- Increase `fallGravityMultiplier`
+- Decrease `jumpForce` and compensate with higher gravity
 
-## Troubleshooting
+### Jumps Feel Too Snappy
+- Decrease `fallGravityMultiplier`
+- Increase `jumpForce`
 
-### "Service not found" errors
-- Ensure service is registered in `Bootstrap.InitializeServices()`
-- Check spelling/capitalization matches exactly
+### Inputs Feel Dropped
+- Increase `jumpBufferDuration` in InputConfig
+- Increase `coyoteTime` in MovementConfig
 
-### Player falls through platforms
-- Verify platform Layer is set to "Ground" (Layer 6)
-- Check Physics2D collision matrix in Project Settings
-- Ensure Rigidbody2D Collision Detection = Continuous
-
-### Input not working
-- Check InputActionAsset is assigned to InputHandler
-- Verify Input Actions are enabled in InputHandler.OnEnable()
-- Open Input Actions asset - ensure Player action map has Move/Jump/Sprint
-
-### Camera not following player
-- Assign Player transform to CameraFollow.target in Inspector
-- Or ensure Player has "Player" tag so CameraFollow auto-finds it
+### Controller Stick Drifts
+- Increase `deadzone` in InputConfig
 
 ---
 
-## Contact
+## Architecture Notes
 
-Questions? Ask your instructor or post in class Discord.
+### Why ServiceLocator?
 
-**Ready to build Celeste-quality movement? Start in Zone A! 🎮**
+PlayerController needs InputReader. Options:
+
+1. **GetComponent** - Only works if on same GameObject
+2. **Find** - Slow, uses magic strings
+3. **Inspector Reference** - Works but gets messy with many connections
+4. **ServiceLocator** - Register once, Get anywhere
+
+ServiceLocator is the right tool when you have "services" that multiple things need access to. It's overkill for this small template, but teaches a pattern you'll use in larger projects.
+
+### Why Separate InputReader and PlayerController?
+
+**Separation of concerns:**
+- InputReader handles hardware weirdness (deadzones, device detection)
+- PlayerController handles game logic (physics, movement rules)
+
+This means you can:
+- Change input handling without touching movement code
+- Test movement with fake input values
+- Support new input devices without rewriting physics
