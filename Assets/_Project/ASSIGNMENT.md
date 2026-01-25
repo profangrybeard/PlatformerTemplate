@@ -191,15 +191,11 @@ While playing, you must be able to explain:
 
 | Component | Points | Description |
 |-----------|--------|-------------|
-| **Git Usage** | 10 | Regular commits, meaningful messages, both teammates committing |
-| **Mechanic 1** | 15 | First mechanic works correctly and feels intentional |
-| **Mechanic 2** | 15 | Second mechanic works correctly and feels intentional |
-| **Mechanic Interaction** | 10 | Mechanics transition cleanly, no conflicting states |
-| **Level Design** | 15 | Level requires both mechanics; teaches before it tests |
-| **Animation Integration** | 15 | Animations respond to gameplay state, transitions are clean |
-| **Juice & Polish** | 10 | Particles, screen shake, squash/stretch — the details |
-| **Code Quality** | 5 | Follows template patterns, proper architecture |
-| **Presentation** | 5 | Clear demo, can explain input flow and decisions |
+| **Mechanics** | 30 | Both mechanics work correctly, feel intentional, and interact cleanly |
+| **Level Design** | 25 | Level requires both mechanics; teaches before it tests; has clear flow |
+| **Animation & Feedback** | 20 | Animations match gameplay state; juice reinforces actions |
+| **Code Quality** | 15 | Follows template patterns; proper architecture; clean state management |
+| **Presentation** | 10 | Clear demo; can explain input flow, mechanic interaction, and design choices |
 | **Total** | 100 | |
 
 ---
