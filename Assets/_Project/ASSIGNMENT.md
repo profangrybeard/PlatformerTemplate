@@ -208,9 +208,43 @@ While playing, you must be able to explain:
 
 You are responsible for delivering a complete, runnable project.
 
-### Required Deliverables
+### Submission Format
 
-You must:
+Submit a single ZIP file named:
+
+**`Lastname_FirstInitial_GAME326_PrecisionPlatformer.zip`**
+
+Example: `Smith_J_GAME326_PrecisionPlatformer.zip`
+
+For team submissions, use the programmer's name.
+
+### Required Contents
+
+Your ZIP must contain:
+
+| Item | Description |
+|------|-------------|
+| **Windows Build** | A folder containing your built .exe and all required files |
+| **Project ZIP** | Your complete Unity project as a separate .zip inside the main zip |
+| **Video** | A 1-minute (max) gameplay video showing both mechanics and the level |
+
+### Build Instructions
+
+1. **File > Build Settings**
+2. Set Platform to **Windows**
+3. Click **Build**
+4. Choose a folder named `Build` inside your project
+5. Test the build on a different computer if possible
+
+### Video Requirements
+
+- Maximum 1 minute
+- Show both mechanics being used
+- Show the level being completed
+- No narration required (but allowed)
+- Screen recording is fine (OBS, Windows Game Bar, etc.)
+
+### Also Required
 
 - ✅ Push all code to your team branch on GitHub
 - ✅ Ensure project runs from a fresh clone
