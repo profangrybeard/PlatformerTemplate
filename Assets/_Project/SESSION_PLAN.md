@@ -18,9 +18,9 @@
 | Session | Focus | Lecture Topics |
 |---------|-------|----------------|
 | 1 | Setup & Foundations | Git basics, template architecture, input systems |
-| 2 | Core Mechanic | Extending existing systems, state management |
-| 3 | Integration | Animation state machines, connecting code to art |
-| 4 | Juice & Polish | Screen shake, particles, visual feedback |
+| 2 | Mechanic 1 | Extending existing systems, state management |
+| 3 | Mechanic 2 & Integration | Multi-mechanic state, animation state machines |
+| 4 | Level Design & Juice | Level design for mechanics, visual feedback |
 | 5 | Tuning & Testing | Parameter tuning, playtesting methodology |
 | 6 | Presentation | Live demos |
 
@@ -47,12 +47,12 @@
 ### Work Block 2 (remaining)
 - Read all template code files
 - Test template with keyboard and controller
-- Discuss and choose mechanic as team
+- Discuss and choose TWO mechanics as a team (think about how they'll interact)
 - First commit checkpoint
 
 ---
 
-## Session 2: Core Implementation
+## Session 2: Mechanic 1 Implementation
 
 ### Lecture 1 (20 min): Extending the Controller
 - How to add a new movement mechanic
@@ -61,7 +61,7 @@
 - Exposing state for other systems
 
 ### Work Block 1 (45 min)
-- **Programmer:** Begin mechanic implementation
+- **Programmer:** Begin first mechanic implementation
 - **Artist:** Set up Animator Controller, begin idle/run animations
 
 ### Lecture 2 (20 min): Animation Fundamentals for Programmers
@@ -70,57 +70,62 @@
 - Why animation timing matters for feel
 
 ### Work Block 2 (remaining)
-- **Programmer:** Continue mechanic, get basic version working
+- **Programmer:** Get first mechanic working (basic version)
 - **Artist:** Complete idle, run, jump, fall animations
 - Commit checkpoint
 
 ---
 
-## Session 3: Integration
+## Session 3: Mechanic 2 & Integration
 
-### Lecture 1 (20 min): Connecting Animation to Code
+### Lecture 1 (20 min): Managing Multiple Mechanics
+- State interaction: what happens when both inputs fire?
+- Priority systems and state machines
+- Preventing conflicting states
+- Input buffering across mechanics
+
+### Work Block 1 (45 min)
+- **Programmer:** Begin second mechanic, plan state transitions
+- **Artist:** First mechanic animations, start second mechanic
+
+### Lecture 2 (20 min): Connecting Animation to Code
 - Creating a PlayerAnimator script
 - Caching animator parameter hashes
 - Driving parameters from gameplay state
 - Transition conditions in the Animator
 
-### Work Block 1 (45 min)
-- Both: Set up PlayerAnimator, connect basic states
-- Test animation transitions match gameplay
-
-### Lecture 2 (20 min): Mechanic-Specific Animation
-- Timing windows: when does animation start vs mechanic?
-- Anticipation and follow-through
-- Communicating state clearly to the player
-
 ### Work Block 2 (remaining)
-- **Artist:** Mechanic-specific animations
-- **Programmer:** Expose all mechanic states, test integration
+- **Programmer:** Both mechanics working, transitions clean
+- **Artist:** Both mechanics animated, PlayerAnimator connected
+- Test: Can you use both mechanics without bugs?
 - Commit checkpoint
 
 ---
 
-## Session 4: Juice & Polish
+## Session 4: Level Design & Juice
 
-### Lecture 1 (20 min): What is Juice?
-- Feedback loops: action → feedback → satisfaction
-- Screen shake fundamentals
-- Particle systems for movement
-- Video reference: "Juice It or Lose It"
+### Lecture 1 (20 min): Level Design for Mechanics
+- **Why this matters:** Your level proves you understand your mechanics
+- Teach before you test: introduce mechanics safely
+- Gating: sections that REQUIRE a specific mechanic
+- Combination challenges: requiring both mechanics together
+- The artist must PLAY to design — feel comes from iteration
 
 ### Work Block 1 (45 min)
+- **Artist:** Begin level layout — paper sketch first, then blockout
 - **Programmer:** Implement camera shake, integrate with mechanics
-- **Artist:** Create particle effects (dust, impact, trails)
+- Both: Identify where each mechanic is required
 
-### Lecture 2 (20 min): Squash, Stretch, and Timing
-- The 12 principles in game animation
-- Scale-based juice (code-driven)
-- Landing impact and anticipation
+### Lecture 2 (20 min): What is Juice?
+- Feedback loops: action → feedback → satisfaction
+- Particle systems for movement
+- Video reference: "Juice It or Lose It"
 - When juice is too much
 
 ### Work Block 2 (remaining)
-- Integrate particles and shake into gameplay
-- Input tuning: test deadzone, buffer values
+- **Artist:** Create particle effects, continue level iteration
+- **Programmer:** Polish mechanics, support level needs
+- Test: Play the level. Does it require BOTH mechanics?
 - Commit checkpoint
 
 ---
@@ -135,15 +140,17 @@
 
 ### Work Block 1 (45 min)
 - Pair tuning: one plays, one adjusts values
-- Decide on a feel target, tune toward it
+- Tune both mechanics AND level difficulty together
 
 ### Lecture 2 (20 min): Playtesting
 - How to run a playtest (watch silently)
 - What to look for: confusion, failed inputs, missed communication
 - Bug vs design issue
+- **Key question:** Did the player use both mechanics?
 
 ### Work Block 2 (remaining)
-- Cross-team playtesting
+- Cross-team playtesting (have another team play your level)
+- Watch them: Do they discover both mechanics? Do they get stuck?
 - Bug fixing and final polish
 - Final commit
 
@@ -185,9 +192,9 @@
 
 | Session | What to Check |
 |---------|---------------|
-| 1 | Git working, template running, mechanic chosen |
-| 2 | Mechanic partially functional, base animations exist |
-| 3 | Animations connected to gameplay state |
-| 4 | Juice elements integrated (particles, shake) |
-| 5 | Tuned feel, playtested, bugs fixed |
-| 6 | Live demo, can explain decisions |
+| 1 | Git working, template running, TWO mechanics chosen |
+| 2 | Mechanic 1 functional, base animations exist |
+| 3 | Both mechanics working, clean state transitions |
+| 4 | Level blockout exists, requires both mechanics |
+| 5 | Tuned feel, level playtested, bugs fixed |
+| 6 | Live demo, can explain both mechanics and level design choices |

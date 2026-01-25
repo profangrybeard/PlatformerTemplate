@@ -16,9 +16,9 @@ In this assignment, you will work from a provided Unity project template to buil
 
 You are not being graded on level design, art quality, or feature count. You are being evaluated on whether you understand why the provided architecture exists, how to extend it correctly, and how input flows from hardware to character movement.
 
-**You will implement one new movement mechanic and polish it until it feels intentional.**
+**You will implement two new movement mechanics that work together, and design a level that requires both.**
 
-A mechanic that works but feels bad is incomplete. A mechanic that feels good demonstrates understanding.
+A mechanic that works but feels bad is incomplete. A mechanic that feels good demonstrates understanding. Two mechanics that complement each other demonstrate mastery.
 
 **This is a team assignment (2 students).**
 
@@ -35,11 +35,12 @@ https://github.com/profangrybeard/PlatformerTemplate
 Your game must include:
 
 - Working walk and jump mechanics (provided in template)
-- One new movement mechanic implemented by your team
+- **Two new movement mechanics** implemented by your team
+- A playable level that **requires both mechanics** to complete
 - Animations that communicate player state
 - Visual feedback (particles, screen shake, or equivalent juice)
 
-The new mechanic must be playable and feel intentional. If it's broken or feels like an accident, the assignment is incomplete.
+Both mechanics must be playable and feel intentional. The level must demonstrate that you understand how your mechanics interact — if either mechanic can be ignored to complete the level, the assignment is incomplete.
 
 ---
 
@@ -58,7 +59,7 @@ You must be able to explain what each system does, why it exists, and how input 
 
 ## Mechanic Options
 
-Choose ONE new movement mechanic to implement:
+Choose TWO movement mechanics to implement. They should complement each other — think about how players will chain them together.
 
 | Mechanic | Description |
 |----------|-------------|
@@ -67,6 +68,14 @@ Choose ONE new movement mechanic to implement:
 | **Climb** | Grab and climb specific surfaces |
 | **Double Jump** | Second jump in mid-air with distinct feel |
 | **Ground Pound** | Fast fall attack with landing impact |
+
+**Strong combinations** (mechanics that create interesting interactions):
+- Wall Slide + Dash (dash to reach walls, wall jump to continue)
+- Double Jump + Ground Pound (reach heights, then slam down)
+- Climb + Dash (dash to grab ledges, climb up)
+
+**Weak combinations** (mechanics that don't interact much):
+- Double Jump + Wall Slide (both solve the same problem: reaching heights)
 
 Other mechanics may be proposed to the instructor for approval.
 
@@ -78,26 +87,41 @@ Other mechanics may be proposed to the instructor for approval.
 
 | Requirement | Description |
 |-------------|-------------|
-| New mechanic script | Follows template patterns (uses ServiceLocator, InputReader) |
-| New config ScriptableObject | Tunable values for your mechanic |
-| Exposed state | Animator can read mechanic state (IsWallSliding, IsDashing, etc.) |
+| Two mechanic scripts | Each follows template patterns (uses ServiceLocator, InputReader) |
+| Config ScriptableObjects | Tunable values for each mechanic (one config per mechanic) |
+| Exposed state | Animator can read all mechanic states (IsWallSliding, IsDashing, etc.) |
+| State interaction | Mechanics must handle transitions between each other cleanly |
+
+### Level Design Requirements
+
+| Requirement | Description |
+|-------------|-------------|
+| Playable level | A complete level with a clear start and end |
+| Mechanic gates | Sections that **require** Mechanic 1 to pass |
+| Mechanic gates | Sections that **require** Mechanic 2 to pass |
+| Combination challenge | At least one section requiring **both mechanics together** |
+| Readable layout | Player can see where to go; mechanics are taught before tested |
+
+The level is not graded on art quality. It is graded on whether it demonstrates understanding of your mechanics and how they interact.
 
 ### Animation Requirements
 
 | Requirement | Description |
 |-------------|-------------|
 | Core states | Idle, Run, Jump, Fall, Land |
-| Mechanic states | Animations specific to your chosen mechanic |
+| Mechanic states | Animations for **both** chosen mechanics |
 | PlayerAnimator script | Drives Animator parameters from gameplay state |
+| Clean transitions | No animation pops or broken blends between mechanic states |
 
 ### Juice Requirements
 
-At least TWO of the following:
+At least THREE of the following (mechanics need feedback):
 
 - Particle effects (dust, trails, impact)
 - Screen shake on impactful actions
 - Squash and stretch on jump/land
 - Visual feedback for mechanic activation
+- Audio cues for mechanic activation (optional but encouraged)
 
 ---
 
@@ -153,7 +177,9 @@ You will:
 While playing, you must be able to explain:
 
 - How input flows from button press to character movement
-- How your new mechanic works and why you made specific choices
+- How each mechanic works and why you made specific choices
+- How the two mechanics interact (state transitions, input priority)
+- Why your level requires both mechanics
 - How animations connect to gameplay state
 - One architectural decision you now understand because of this project
 
@@ -166,11 +192,14 @@ While playing, you must be able to explain:
 | Component | Points | Description |
 |-----------|--------|-------------|
 | **Git Usage** | 10 | Regular commits, meaningful messages, both teammates committing |
-| **Core Mechanic** | 25 | New mechanic works correctly and feels intentional |
-| **Animation Integration** | 20 | Animations respond to gameplay state, transitions are clean |
-| **Juice & Polish** | 20 | Particles, screen shake, squash/stretch — the details |
-| **Code Quality** | 15 | Follows template patterns, proper architecture |
-| **Presentation** | 10 | Clear demo, can explain input flow and decisions |
+| **Mechanic 1** | 15 | First mechanic works correctly and feels intentional |
+| **Mechanic 2** | 15 | Second mechanic works correctly and feels intentional |
+| **Mechanic Interaction** | 10 | Mechanics transition cleanly, no conflicting states |
+| **Level Design** | 15 | Level requires both mechanics; teaches before it tests |
+| **Animation Integration** | 15 | Animations respond to gameplay state, transitions are clean |
+| **Juice & Polish** | 10 | Particles, screen shake, squash/stretch — the details |
+| **Code Quality** | 5 | Follows template patterns, proper architecture |
+| **Presentation** | 5 | Clear demo, can explain input flow and decisions |
 | **Total** | 100 | |
 
 ---
@@ -197,6 +226,8 @@ You must:
 - Mechanic that is broken or feels accidental
 - Animations that don't match gameplay state
 - Only one teammate's commits in the repo
+- Level can be completed without using both mechanics
+- Mechanics conflict or break each other's states
 
 These issues indicate lack of testing or incomplete work.
 
